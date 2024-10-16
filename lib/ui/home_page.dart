@@ -1,4 +1,4 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:notes_app/models/note_model.dart';
@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       endDrawer: const EndDrawer(),
       body: Container(
         color: Colors.grey.shade100,
-        child: StreamBuilder(
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: firestore
               .collection('users')
               .doc(authController.user!.uid)
@@ -41,17 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
-            final noteList = snapshot.data!.docs
-                .map(
-                  (e) => Note.fromMap(e),
-                )
-                .toList();
+            final noteList =
+                snapshot.data!.docs.map((e) => Note.fromMap(e)).toList();
+
             return GroupedListView(
               order: GroupedListOrder.DESC,
               elements: noteList,
               groupBy: (Note note) => note.date,
               groupHeaderBuilder: (Note note) => Padding(
-                padding: const EdgeInsets.all(10.0).copyWith(left: 20),
+                padding: const EdgeInsets.all(10.0).copyWith(left: 16),
                 child: Text(
                   getFormattedDate(note.date).toUpperCase(),
                   style: const TextStyle(
@@ -153,20 +151,19 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add Notes'),
+        title: Text(note == null ? 'Add Notes' : 'Update Notes'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
+              controller: textController,
               autofocus: true,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5))),
             ),
-            const SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 5),
             OutlinedButton(
               onPressed: () async {
                 final newTime = await showTimePicker(
@@ -184,18 +181,19 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           if (note != null)
             TextButton.icon(
-                onPressed: () {
-                  notesController.deleteNote(note.id);
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-                label: const Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.red),
-                )),
+              onPressed: () {
+                notesController.deleteNote(note.id);
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+              label: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
