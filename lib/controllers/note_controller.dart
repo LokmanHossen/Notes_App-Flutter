@@ -20,7 +20,18 @@ class NotesController extends GetxController {
     }
   }
 
-  updateNote(String id, Note note) async {}
+  updateNote(String id, Note note) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(authController.user!.uid)
+          .collection('notes')
+          .doc(id)
+          .update(note.toMap());
+    } catch (e) {
+      debugPrint('Something went wrong(Update): $e');
+    }
+  }
 
   deleteNote(String id) async {}
 
