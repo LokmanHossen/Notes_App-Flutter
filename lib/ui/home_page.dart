@@ -84,6 +84,47 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
+                      child: AnimatedOpacity(
+                        opacity: note.isDone ? 0.4 : 1.0,
+                        duration: const Duration(milliseconds: 100),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Text(
+                                  note.text,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              note.time,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            InkWell(
+                              onTap: () {
+                                notesController.updateNote(note.id,
+                                    note.copyWith(isDone: !note.isDone));
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.all(4).copyWith(right: 14),
+                                child: Icon(
+                                  note.isDone
+                                      ? Icons.check_circle
+                                      : Icons.circle_outlined,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 );
@@ -148,11 +189,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 return;
               }
               if (note != null) {
+                notesController.updateNote(note.id,
+                    note.copyWith(text: textController.text, time: time));
+              } else {
                 notesController.addNote(textController.text, time,
                     getDateTimestamp(DateTime.now()));
               }
+              Navigator.pop(context);
             },
-            child: const Text('Add Notes'),
+            child: Text(note == null ? 'Add Notes' : 'Update Notes'),
           )
         ],
       ),
