@@ -33,7 +33,18 @@ class NotesController extends GetxController {
     }
   }
 
-  deleteNote(String id) async {}
+  deleteNote(String id) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(authController.user!.uid)
+          .collection('notes')
+          .doc(id)
+          .delete();
+    } catch (e) {
+      debugPrint('Something went wrong(Delete): $e');
+    }
+  }
 
   deleteCompleted() {}
 }

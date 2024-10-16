@@ -168,16 +168,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          TextButton.icon(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-              label: const Text(
-                'Delete',
-                style: TextStyle(color: Colors.red),
-              )),
+          if (note != null)
+            TextButton.icon(
+                onPressed: () {
+                  notesController.deleteNote(note.id);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
+                label: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                )),
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
