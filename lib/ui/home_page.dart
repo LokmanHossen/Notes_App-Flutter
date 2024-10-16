@@ -66,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: InkWell(
                     onTap: () {
                       textController.text = note.text;
-                      showNoteInput(context);
+                      time = note.time;
+                      showNoteInput(context, note: note);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -135,8 +136,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showNoteInput(context);
+        onPressed: () async {
+          setState(() {
+            time = TimeOfDay.now().format(context);
+          });
+          await showNoteInput(context).then((value) {
+            textController.clear();
+          });
         },
         child: const Icon(Icons.add),
       ),
@@ -162,7 +168,15 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 5,
             ),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () async {
+                final newTime = await showTimePicker(
+                    context: context, initialTime: TimeOfDay.now());
+                if (newTime != null) {
+                  setState(() {
+                    time = newTime.format(context);
+                  });
+                }
+              },
               child: Text('Time: $time'),
             ),
           ],
