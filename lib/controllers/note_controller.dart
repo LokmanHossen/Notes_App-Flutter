@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notes_app/models/note_model.dart';
@@ -46,5 +47,23 @@ class NotesController extends GetxController {
     }
   }
 
-  deleteCompleted() {}
+  deleteCompleted() {
+    try {
+      WriteBatch batch = firestore.batch();
+      return firestore
+          .collection('users')
+          .doc(authController.user!.uid)
+          .collection('notes')
+          .where('isDone', isEqualTo: true)
+          .get()
+          .then((querySnapshot) {
+        for (var document in querySnapshot.docs) {
+          batch.delete(document.reference);
+        }
+        return batch.commit();
+      });
+    } catch (e) {
+      debugPrint('Something went wrong(Batch Delete): $e');
+    }
+  }
 }

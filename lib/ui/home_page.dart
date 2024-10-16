@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:notes_app/models/note_model.dart';
+import 'package:notes_app/ui/drawer.dart';
 import 'package:notes_app/utils/constants.dart';
 import 'package:notes_app/utils/date_time.dart';
 
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Notes App'),
       ),
-      // add Draer
+      endDrawer: const EndDrawer(),
       body: Container(
         color: Colors.grey.shade100,
         child: StreamBuilder(
@@ -134,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           setState(() {
