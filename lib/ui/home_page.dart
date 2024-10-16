@@ -31,8 +31,59 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showNoteInput(context);
+        },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  showNoteInput(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add Notes'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              autofocus: true,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5))),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            OutlinedButton(
+              onPressed: () {},
+              child: const Text('Time'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton.icon(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+              label: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              )),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('Update Notes'),
+          )
+        ],
       ),
     );
   }
